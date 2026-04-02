@@ -1,0 +1,26 @@
+# Angular
+.angular/
+dist/
+out-tsc/
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+*.js.map
+*.d.ts.map

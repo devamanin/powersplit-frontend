@@ -1,0 +1,708 @@
+// Variables
+$primary-color: #3b82f6;
+$secondary-color: #10b981;
+$danger-color: #ef4444;
+$warning-color: #f59e0b;
+$light-bg: #f3f4f6;
+$dark-text: #1f2937;
+$border-color: #e5e7eb;
+$shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: $light-bg;
+  color: $dark-text;
+  line-height: 1.6;
+}
+
+.app-container {
+  display: flex;
+  height: 100vh;
+}
+
+// Sidebar
+.sidebar {
+  width: 280px;
+  background-color: white;
+  border-right: 1px solid $border-color;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  position: fixed;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  z-index: 100;
+
+  .sidebar-header {
+    padding: 20px 15px;
+    border-bottom: 2px solid $primary-color;
+    background: linear-gradient(135deg, #f0f9ff 0%, #f9fafb 100%);
+
+    h3 {
+      color: $primary-color;
+      font-size: 1.1rem;
+      margin: 0;
+    }
+  }
+
+  .months-list {
+    flex: 1;
+    padding: 10px 0;
+    overflow-y: auto;
+  }
+
+  .month-item {
+    padding: 12px 15px;
+    border-left: 4px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+
+    &:hover {
+      background-color: $light-bg;
+      padding-left: 18px;
+    }
+
+    &.active {
+      background-color: #dbeafe;
+      border-left-color: $primary-color;
+      font-weight: 600;
+      color: $primary-color;
+    }
+
+    .month-name {
+      flex: 1;
+      font-size: 0.95rem;
+    }
+
+    .btn-delete {
+      background: none;
+      border: none;
+      color: #ef4444;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: all 0.2s;
+      opacity: 0;
+
+      &:hover {
+        background-color: #fee2e2;
+        opacity: 1;
+      }
+    }
+
+    &:hover .btn-delete {
+      opacity: 1;
+    }
+  }
+
+  .sidebar-footer {
+    padding: 15px;
+    border-top: 1px solid $border-color;
+    text-align: center;
+
+    .no-data {
+      color: #9ca3af;
+      font-size: 0.85rem;
+      margin: 0;
+    }
+  }
+}
+
+// Main Content
+.main-content {
+  flex: 1;
+  margin-left: 280px;
+  overflow-y: auto;
+  background-color: $light-bg;
+}
+
+.main-content-inner {
+  margin-bottom: 40px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+// Header
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+  animation: slideDown 0.5s ease-out;
+
+  h1 {
+    font-size: 2.5rem;
+    color: $primary-color;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+    color: #6b7280;
+  }
+
+  .auto-save-indicator {
+    font-size: 0.9rem;
+    color: #10b981;
+    margin-top: 8px;
+    font-weight: 500;
+    animation: pulse 2s infinite;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+// Main Content
+.main-content {
+  margin-bottom: 40px;
+}
+
+// Card/Section Base Styles
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow: $shadow;
+  border: 1px solid $border-color;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-lg;
+  }
+}
+
+.section-title {
+  font-size: 1.5rem;
+  color: $dark-text;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+// Form Styles
+.form-group {
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: $dark-text;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="month"],
+  select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid $border-color;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+  }
+}
+
+.checkbox-group {
+  margin-bottom: 20px;
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    margin-bottom: 0;
+
+    .checkbox-input {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      accent-color: $primary-color;
+    }
+
+    .checkbox-label {
+      font-weight: 500;
+      color: $dark-text;
+    }
+  }
+
+  .info-text {
+    margin-top: 8px;
+    margin-left: 30px;
+    font-size: 0.9rem;
+    color: #6b7280;
+  }
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid $border-color;
+  border-radius: 6px;
+  font-size: 1rem;
+
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+}
+
+.input-small {
+  max-width: 80px;
+}
+
+// Button Styles
+.btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-block;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: $shadow-lg;
+  }
+}
+
+.btn-primary {
+  background-color: $primary-color;
+  color: white;
+
+  &:hover:not(:disabled) {
+    background-color: darken($primary-color, 10%);
+  }
+}
+
+.btn-secondary {
+  background-color: $secondary-color;
+  color: white;
+
+  &:hover:not(:disabled) {
+    background-color: darken($secondary-color, 10%);
+  }
+}
+
+.btn-danger {
+  background-color: $danger-color;
+  color: white;
+
+  &:hover:not(:disabled) {
+    background-color: darken($danger-color, 10%);
+  }
+}
+
+.btn-calculate {
+  background-color: #8b5cf6;
+  color: white;
+  font-size: 1.1rem;
+  padding: 15px 30px;
+  width: 100%;
+
+  &:hover:not(:disabled) {
+    background-color: darken(#8b5cf6, 10%);
+  }
+}
+
+.btn-sm {
+  padding: 6px 10px;
+  font-size: 0.85rem;
+}
+
+// Roommates Section
+.roommates-list {
+  margin-top: 20px;
+}
+
+.roommate-item {
+  background-color: $light-bg;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  border-left: 4px solid $primary-color;
+}
+
+.roommate-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.roommate-name {
+  font-weight: 600;
+  color: $dark-text;
+}
+
+// Configuration Section
+.configuration-section {
+  background-color: #f9fafb;
+}
+
+.sub-section {
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid $border-color;
+
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    color: $dark-text;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+}
+
+.info-text {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-bottom: 12px;
+  font-style: italic;
+}
+
+// Hours Grid
+.hours-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.hours-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label {
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  input {
+    padding: 6px 8px;
+    font-size: 0.9rem;
+  }
+}
+
+.hours-suffix {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.vacation-display {
+  background-color: #fef3c7;
+  padding: 12px;
+  border-radius: 6px;
+  margin-top: 12px;
+  color: #78350f;
+  font-size: 0.95rem;
+}
+
+// Action Section
+.action-section {
+  text-align: center;
+  margin-bottom: 30px;
+
+  .hint {
+    color: #ef4444;
+    font-size: 0.9rem;
+    margin-top: 10px;
+  }
+}
+
+// Results Section
+.results-section {
+  background: linear-gradient(135deg, #f0fdf4 0%, #f0f9ff 100%);
+  border: 2px solid $secondary-color;
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 15px;
+
+  h2 {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.subsection {
+  margin-bottom: 25px;
+
+  h3 {
+    font-size: 1.1rem;
+    color: $dark-text;
+    margin-bottom: 15px;
+    font-weight: 600;
+  }
+}
+
+// Calculation Table
+.calculation-table {
+  border-collapse: collapse;
+  width: 100%;
+  background-color: white;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid $border-color;
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1.5fr 1.5fr;
+  background-color: $primary-color;
+  color: white;
+  padding: 15px;
+  font-weight: 600;
+  gap: 15px;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1.5fr 1.5fr;
+  padding: 15px;
+  border-top: 1px solid $border-color;
+  gap: 15px;
+  align-items: center;
+
+  &:hover {
+    background-color: $light-bg;
+  }
+}
+
+.roommate-name-cell {
+  font-weight: 500;
+  color: $dark-text;
+}
+
+.amount-cell {
+  color: $secondary-color;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+// Settlement List
+.settlement-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+
+    .btn {
+      width: 100%;
+    }
+  }
+}
+
+.settlement-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: white;
+  padding: 15px;
+  border-radius: 6px;
+  border-left: 4px solid $warning-color;
+  flex-wrap: wrap;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .settlement-arrow {
+      order: 2;
+      width: 100%;
+    }
+  }
+}
+
+.settlement-from {
+  font-weight: 600;
+  color: $danger-color;
+}
+
+.settlement-arrow {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.settlement-to {
+  font-weight: 600;
+  color: $secondary-color;
+}
+
+.settlement-amount {
+  color: $warning-color;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-left: auto;
+
+  @media (max-width: 600px) {
+    margin-left: 0;
+  }
+}
+
+// Alert
+.alert {
+  padding: 15px;
+  border-radius: 6px;
+  margin: 15px 0;
+  font-weight: 500;
+}
+
+.alert-neutral {
+  background-color: #dbeafe;
+  color: #1e40af;
+  border-left: 4px solid $primary-color;
+}
+
+// Footer
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: #6b7280;
+  border-top: 1px solid $border-color;
+  margin-top: 40px;
+
+  p {
+    font-size: 0.9rem;
+  }
+}
+
+// Animations
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive Design
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 250px;
+  }
+
+  .main-content {
+    margin-left: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+    border-right: none;
+    border-bottom: 1px solid $border-color;
+    max-height: 200px;
+
+    .months-list {
+      display: flex;
+      gap: 8px;
+      padding: 10px 15px;
+      flex-wrap: wrap;
+    }
+
+    .month-item {
+      padding: 8px 12px;
+      border-left: none;
+      border-bottom: 3px solid transparent;
+      border-radius: 6px 6px 0 0;
+
+      &:hover {
+        padding-left: 12px;
+      }
+
+      &.active {
+        background-color: white;
+        border-bottom-color: $primary-color;
+      }
+    }
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+
+  .container {
+    max-width: 100%;
+    padding: 15px;
+  }
+
+  .header h1 {
+    font-size: 1.8rem;
+  }
+}
