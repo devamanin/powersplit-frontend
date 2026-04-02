@@ -34,7 +34,7 @@ export class BillService {
   private includeWeekends$ = new BehaviorSubject<boolean>(false);
   private savedMonths$ = new BehaviorSubject<string[]>([]);
 
-  private readonly API_URL = 'http://localhost:3001/api';
+  private readonly API_URL = 'https://powersplit-backend.onrender.com/api';
 
   constructor() {
     this.calculateSaturationDays();
