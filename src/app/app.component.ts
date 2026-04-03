@@ -31,6 +31,7 @@ export class AppComponent implements OnInit {
 
   month: string = '2026-04';
   totalBill: number = 700;
+  fixedCharge: number = 0;
   totalDays: number = 30;
   newRoommateName: string = '';
   includeWeekends: boolean = false;
@@ -47,6 +48,7 @@ export class AppComponent implements OnInit {
 
   constructor(public billService: BillService) {}
 
+
   ngOnInit(): void {
     this.billService.getRoommates().subscribe(roommates => {
       this.roommates = roommates;
@@ -61,6 +63,13 @@ export class AppComponent implements OnInit {
 
     this.billService.getTotalBill().subscribe(bill => {
       this.totalBill = bill;
+      if (this.showResults) {
+        this.calculateBill();
+      }
+    });
+
+    this.billService.getFixedCharge().subscribe(charge => {
+      this.fixedCharge = charge;
       if (this.showResults) {
         this.calculateBill();
       }
@@ -95,6 +104,10 @@ export class AppComponent implements OnInit {
   updateMonth(): void {
     this.billService.setMonth(this.month);
     this.billService.setTotalDaysInMonth(this.getDaysInMonth(this.month));
+  }
+
+  updateFixedCharge(): void {
+    this.billService.setFixedCharge(this.fixedCharge);
   }
 
   getDaysInMonth(monthStr: string): number {

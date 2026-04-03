@@ -14,6 +14,7 @@ export interface BillCalculation {
   totalHours: number;
   totalUsagePercentage: number;
   amountToPay: number;
+  fixedCharge: number;
 }
 
 export interface Settlement {
@@ -28,6 +29,7 @@ export interface Settlement {
 export class BillService {
   private roommates$ = new BehaviorSubject<Roommate[]>([]);
   private totalBill$ = new BehaviorSubject<number>(700);
+  private fixedCharge$ = new BehaviorSubject<number>(0);
   private month$ = new BehaviorSubject<string>('2026-04');
   private totalDaysInMonth$ = new BehaviorSubject<number>(30);
   private saturationDays$ = new BehaviorSubject<number[]>([]); // Saturdays and Sundays
@@ -49,6 +51,7 @@ export class BillService {
       const data = await res.json();
       if (data.roommates) this.roommates$.next(data.roommates);
       if (data.totalBill) this.totalBill$.next(data.totalBill);
+      if (data.fixedCharge !== undefined) this.fixedCharge$.next(data.fixedCharge);
       if (data.month) {
         this.month$.next(data.month);
         this.calculateSaturationDays();
@@ -76,6 +79,7 @@ export class BillService {
       const data = {
         roommates: this.roommates$.value,
         totalBill: this.totalBill$.value,
+        fixedCharge: this.fixedCharge$.value,
         month: this.month$.value,
         totalDaysInMonth: this.totalDaysInMonth$.value,
         includeWeekends: this.includeWeekends$.value
@@ -89,6 +93,14 @@ export class BillService {
     } catch (error) {
       console.error('Error saving data to backend:', error);
     }
+  }
+  getFixedCharge(): Observable<number> {
+    return this.fixedCharge$.asObservable();
+  }
+
+  async setFixedCharge(amount: number): Promise<void> {
+    this.fixedCharge$.next(amount);
+    await this.saveToBackend();
   }
 
   private async updateSavedMonths(): Promise<void> {
@@ -184,6 +196,7 @@ export class BillService {
   calculateBill(): { calculations: BillCalculation[]; settlements: Settlement[] } {
     const roommates = this.roommates$.value;
     const totalBill = this.totalBill$.value;
+    const fixedCharge = this.fixedCharge$.value;
     const totalDays = this.totalDaysInMonth$.value;
     const saturationDays = this.saturationDays$.value;
     const includeWeekends = this.includeWeekends$.value;
@@ -216,7 +229,8 @@ export class BillService {
         name: roommate.name,
         totalHours,
         totalUsagePercentage: 0, // Will be calculated below
-        amountToPay: 0 // Will be calculated below
+        amountToPay: 0, // Will be calculated below
+        fixedCharge: 0
       });
 
       grandTotalHours += totalHours;
@@ -225,7 +239,9 @@ export class BillService {
     // Calculate percentage and amount
     calculations.forEach(calc => {
       calc.totalUsagePercentage = grandTotalHours > 0 ? (calc.totalHours / grandTotalHours) * 100 : 0;
-      calc.amountToPay = (calc.totalUsagePercentage / 100) * totalBill;
+      // Split fixed charge equally
+      calc.fixedCharge = roommates.length > 0 ? fixedCharge / roommates.length : 0;
+      calc.amountToPay = (calc.totalUsagePercentage / 100) * (totalBill - fixedCharge) + calc.fixedCharge;
     });
 
     // Calculate settlements
